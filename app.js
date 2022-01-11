@@ -1,8 +1,9 @@
 
 
-//  Llamamos a espress
+//  Llamamos a express
 const express = require('express');
 const activo = express();
+const morgan = require('morgan');
 
 //(sin urlencoded nos devuelve "undefined") para capturar datos del formulario.
 activo.use(express.urlencoded({extended:false}));
@@ -17,6 +18,7 @@ activo.use('/resources',express.static('public'));
 activo.use('/resources', express.static(__dirname + '/public'));
 
 //  motor de plantillas
+activo.set('port', process.env.PORT || 3000);
 activo.set('view engine','ejs');
 
 // creacion de variable bcrypt para encriptar contraseñas
@@ -30,7 +32,7 @@ activo.use(session({
 	saveUninitialized: true
 }));
 
-
+app.use(morgan("dev"));
 // Conexxion de la base de datos
 const connection = require('./database/db');
 
@@ -239,7 +241,6 @@ activo.use(function(req, res, next) {
 	  res.redirect('/') 
 	})
 });
-
 
 activo.listen(3000, (req, res)=>{
     console.log('SERVER RUNNING IN http://localhost:3000');
